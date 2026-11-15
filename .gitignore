@@ -25,3 +25,17 @@ _ide_helper.php
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+
+# Docker
+docker-compose.override.yml
+compose.override.yaml
+
+# Local database and Docker data
+mysql-data/
+db_data/
+docker-data/
+
+# Environment files
+.env.*
+!.env.example
