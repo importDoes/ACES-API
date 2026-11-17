@@ -30,6 +30,10 @@ Thumbs.db
 # Docker
 docker-compose.override.yml
 compose.override.yaml
+compose.yml
+compose.yaml
+docker-compose.yml
+docker-compose.yaml
 
 # Local database and Docker data
 mysql-data/
