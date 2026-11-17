@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
+            $table->string('lrn')->unique();
+            $table->string('password_hash');
             $table->timestamps();
         });
     }
