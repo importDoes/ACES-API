@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Role extends Model
 {
-     protected $fillable = [
+    protected $fillable = [
         'slug',
         'name',
         'description',
@@ -16,17 +16,14 @@ class Role extends Model
 
     public function studentDetails(): HasMany
     {
-        return $this->hasMany(StudentDetail::class, 'role_id');
+        return $this->hasMany(StudentDetail::class);
     }
 
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Permission::class,
-            'permission_role',
-            'roles_id',
-            'permission_id'
-        )->withTimestamps();
+        return $this->belongsToMany(Permission::class)
+        ->using(PermissionRole::class)
+        ->withTimestamps();
     }
     //
 }

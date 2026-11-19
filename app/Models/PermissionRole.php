@@ -3,28 +3,25 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class PermissionRole extends Model
-{
-}
 
-class Permission extends Model
+class PermissionRole extends Pivot
 {
-    use SoftDeletes;
-
+    
     protected $fillable = [
-        'actions',
+        'permission_id',
+        'role_id',
     ];
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Role::class,
-            'permission_role',
-            'permission_id',
-            'roles_id'
-        )->withTimestamps();
+        return $this->belongsToMany(Role::class)->withTimestamps();;
+    }
+
+    public function permissions(): BelongsToMany
+    {
+        return $this->belongsToMany(Permission::class)->withTimestamps();;
     }
 }

@@ -2,64 +2,96 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StudentRequest;
 use App\Models\Student;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all students.
      */
     public function index()
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Students retrieved successfully.',
+            'data' => Student::paginate(10),
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Register a student.
      */
-    public function create()
+    public function store(StudentRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $student = Student::create([
+            'lrn' => $validated['lrn'],
+            'password_hash' => Hash::make($validated['password']),
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Student registered successfully.',
+            'data' => $student,
+        ], 201);
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Display a specific student.
      */
     public function show(Student $student)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Student retrieved successfully.',
+            'data' => $student,
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Update student information.
      */
-    public function edit(Student $student)
-    {
-        //
+    public function update(
+        StudentRequest $request,
+        Student $student
+    ) {
+        $validated = $request->validated();
+
+        $studentData = [];
+
+        if (isset($validated['lrn'])) {
+            $studentData['lrn'] = $validated['lrn'];
+        }
+
+        if (isset($validated['password'])) {
+            $studentData['password_hash'] = Hash::make(
+                $validated['password']
+            );
+        }
+
+        $student->update($studentData);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Student updated successfully.',
+            'data' => $student->fresh(),
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Student $student)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
+     * Delete a student.
      */
     public function destroy(Student $student)
     {
-        //
+        $student->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Student deleted successfully.',
+        ]);
     }
 }

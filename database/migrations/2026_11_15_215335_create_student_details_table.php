@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('age');
             $table->string('gender');
 
-            $table->foreignId('addresses')
+            $table->foreignId('address_id')
                 ->constrained('addresses');
 
             $table->string('birthdate');

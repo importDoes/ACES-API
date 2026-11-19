@@ -2,8 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegistrationRequest;
 use App\Models\StudentDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StudentDetailRequest;
+use App\Models\Role;
+use App\Models\Student;
+use Illuminate\Support\Facades\Hash;
+use Throwable;
 
 class StudentDetailController extends Controller
 {
@@ -12,47 +19,55 @@ class StudentDetailController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'data' => StudentDetail::all(),
+            'status' => 'success',
+            'message' => "Student details retrieved successfully"
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
      */
     public function show(StudentDetail $studentDetail)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $studentDetail,
+            'message' => "Student Detail ID" . $studentDetail->id . "retrieved successfully"
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(StudentDetail $studentDetail)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, StudentDetail $studentDetail)
+    public function update(StudentDetailRequest $request, StudentDetail $studentDetail)
     {
-        //
+        $validated = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            $studentDetail->update($validated);
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $studentDetail->fresh(),
+                'message' => 'Student Detail updated successfully.',
+            ], 200);
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -60,6 +75,11 @@ class StudentDetailController extends Controller
      */
     public function destroy(StudentDetail $studentDetail)
     {
-        //
+        $studentDetail->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Permission deleted successfully',
+        ]);
     }
 }

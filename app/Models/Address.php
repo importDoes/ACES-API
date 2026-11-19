@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Address extends Model
 {
@@ -18,8 +18,8 @@ class Address extends Model
         'zip_code',
     ];
 
-    public function studentDetails(): HasMany
+    public function studentDetails(): HasOne
     {
-        return $this->hasMany(StudentDetail::class, 'addresses');
+        return $this->hasOne(StudentDetail::class, 'address_id');
     }
 }

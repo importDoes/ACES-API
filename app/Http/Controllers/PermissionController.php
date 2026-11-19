@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\PermissionRequest;
 
 class PermissionController extends Controller
 {
@@ -12,23 +14,41 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json([
+            'data' => Permission::all(),
+            'status' => 'success',
+            'message' => "Permission retrieved successfully"
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
-     * Store a newly created resource in storage.
+     * Show the form for editing the specified resource.
      */
-    public function store(Request $request)
+    public function store(PermissionRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        try {
+            DB::beginTransaction();
+            $permission = Permission::create($validated);
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $permission,
+                'message' => 'Permission Registration Successful',
+            ], 201);
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -36,23 +56,25 @@ class PermissionController extends Controller
      */
     public function show(Permission $permission)
     {
-        //
+        return response()->json([
+            'status' => 'success',
+            'data' => $permission,
+            'message' => "Permission ID" . $permission->id . "retrieved successfully"
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Permission $permission)
+    public function update(PermissionRequest $request, Permission $permission)
     {
-        //
-    }
+        $validated = $request->validated();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Permission $permission)
-    {
-        //
+        $permission->update($validated);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $permission->fresh(),
+            'message' => 'Permission updated successfully.',
+        ], 200);
+        
     }
 
     /**
@@ -60,6 +82,11 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        //
+        $permission->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Permission deleted successfully',
+        ]);
     }
 }
