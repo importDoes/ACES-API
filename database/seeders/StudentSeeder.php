@@ -24,7 +24,7 @@ class StudentSeeder extends Seeder
             ],
             [
                 'lrn' => '123456789014',
-                'password_hash' => Hash::make('password123'),
+                'password_hash' => Hash::make(' '),
             ],
         ];
 

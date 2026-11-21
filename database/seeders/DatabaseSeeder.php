@@ -21,6 +21,22 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             AddressSeeder::class,
             StudentDetailSeeder::class,
+            AssessmentDimensionSeeder::class,
+            IndicatorSeeder::class,
+            AssessmentQuestionSeeder::class,
+            QuestionOptionSeeder::class,
+            OptionIndicatorScoreSeeder::class,
+            CareerPathwaySeeder::class,
+            PathwayIndicatorMappingSeeder::class,
+            AssessmentSessionSeeder::class,
+            AssessmentResponseSeeder::class,
+            LearnerIndicatorScoreSeeder::class,
+            AssessmentResultSeeder::class,
+            PathwayRecommendationSeeder::class,
+            CareerDecisionScoreSeeder::class,
+            CareerValuePreferenceSeeder::class,
+            CareerInterventionSeeder::class,
+            RoadmapStepSeeder::class,
         ]);
     }
 }

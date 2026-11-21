@@ -21,24 +21,6 @@ class StudentController extends Controller
         ]);
     }
 
-    /**
-     * Register a student.
-     */
-    public function store(StudentRequest $request)
-    {
-        $validated = $request->validated();
-
-        $student = Student::create([
-            'lrn' => $validated['lrn'],
-            'password_hash' => Hash::make($validated['password']),
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Student registered successfully.',
-            'data' => $student,
-        ], 201);
-    }
 
     /**
      * Display a specific student.
