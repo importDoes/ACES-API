@@ -14,19 +14,19 @@ class StudentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'lrn' => [
-                'required',
-                'string',
-                'digits:12',
-                'unique:students,lrn',
-            ],
+                'lrn' => [
+                    'required',
+                    'string',
+                    'digits:12',
+                    'unique:students,lrn',
+                ],
 
-            'password' => [
-                'required',
-                'string',
-                'min:8',
-                'confirmed',
-            ],
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    // 'confirmed',
+                ],
         ];
     }
 

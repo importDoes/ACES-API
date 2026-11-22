@@ -18,8 +18,14 @@ class Address extends Model
         'zip_code',
     ];
 
+    /**
+     * Address has one student detail.
+     */
     public function studentDetails(): HasOne
     {
-        return $this->hasOne(StudentDetail::class, 'address_id');
+        return $this->hasOne(
+            StudentDetail::class,
+            'address_id'
+        );
     }
 }

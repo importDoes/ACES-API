@@ -2,27 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Address;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Requests\AddressRequest;
+use App\Models\Address;
+use Illuminate\Support\Facades\DB;
 
 class AddressController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all addresses.
      */
     public function index()
     {
         return response()->json([
-            'data' => Address::all(),
             'status' => 'success',
-            'message' => "Address retrieved successfully"
+            'message' => 'Addresses retrieved successfully.',
+            'data' => Address::with('studentDetails')->paginate(10),
         ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a new address.
      */
     public function store(AddressRequest $request)
     {
@@ -30,79 +29,98 @@ class AddressController extends Controller
 
         try {
             DB::beginTransaction();
+
             $address = Address::create($validated);
+
             DB::commit();
 
             return response()->json([
                 'status' => 'success',
+                'message' => 'Address registration successful.',
                 'data' => $address,
-                'message' => 'Address Registration Successful',
             ], 201);
-        } catch (\Throwable $e) {
 
+        } catch (\Throwable $e) {
             DB::rollBack();
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something went wrong',
+                'message' => 'Address registration failed.',
                 'error' => $e->getMessage(),
             ], 500);
         }
-
-        dd("Address Registration Successful");
     }
 
     /**
-     * Display the specified resource.
+     * Display a specific address.
      */
     public function show(Address $address)
     {
         return response()->json([
             'status' => 'success',
-            'data' => $address,
-            'message' => "Address ID" . $address->id . "retrieved successfully"
+            'message' => 'Address retrieved successfully.',
+            'data' => $address->load('studentDetails'),
         ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update an address.
      */
-    public function update(AddressRequest $request, Address $address)
-    {
+    public function update(
+        AddressRequest $request,
+        Address $address
+    ) {
         $validated = $request->validated();
 
         try {
             DB::beginTransaction();
+
             $address->update($validated);
+
             DB::commit();
 
             return response()->json([
                 'status' => 'success',
-                'data' => $address->fresh(),
                 'message' => 'Address updated successfully.',
-            ], 200);
-        } catch (\Throwable $e) {
+                'data' => $address->fresh(),
+            ]);
 
+        } catch (\Throwable $e) {
             DB::rollBack();
 
             return response()->json([
                 'status' => 'error',
-                'message' => 'Something went wrong',
+                'message' => 'Address update failed.',
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Delete an address.
      */
     public function destroy(Address $address)
     {
-        $address->delete();
+        try {
+            DB::beginTransaction();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Address deleted successfully',
-        ]);
+            $address->delete();
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Address deleted successfully.',
+            ]);
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Address deletion failed.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

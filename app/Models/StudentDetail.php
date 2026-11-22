@@ -4,8 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StudentDetail extends Model
 {
@@ -23,19 +21,37 @@ class StudentDetail extends Model
         'guardian_contact_number',
     ];
 
+    /**
+     * Student detail belongs to a student.
+     */
     public function user(): BelongsTo
     {
-        return $this->belongsTo(Student::class, 'user_id');
+        return $this->belongsTo(
+            Student::class,
+            'user_id'
+        );
     }
 
+    /**
+     * Student detail belongs to a role.
+     */
     public function role(): BelongsTo
     {
-        return $this->belongsTo(Role::class, 'role_id');
+        return $this->belongsTo(
+            Role::class,
+            'role_id'
+        );
     }
 
+    /**
+     * Student detail belongs to an address.
+     */
     public function address(): BelongsTo
     {
-        return $this->belongsTo(Address::class, 'addresses');
+        return $this->belongsTo(
+            Address::class,
+            'address_id'
+        );
     }
-    //
 }
+

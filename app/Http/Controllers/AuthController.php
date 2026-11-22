@@ -16,19 +16,20 @@ class AuthController extends Controller
     /**
      * Authenticate student and generate JWT.
      */
+
     public function login(StudentLoginRequest $request)
-    {
-        $credentials = $request->validated();
+{
+    $credentials = $request->validated();
 
-        if (!$token = $this->guard()->attempt($credentials)) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Invalid LRN or password.',
-            ], 401);
-        }
-
-        return $this->respondWithToken($token);
+    if (!$token = $this->guard()->attempt($credentials)) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid LRN or password.',
+        ], 401);
     }
+
+    return $this->respondWithToken($token);
+}
 
     /**
      * Retrieve authenticated student.

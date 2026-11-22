@@ -17,9 +17,15 @@ class Student extends Authenticatable implements JWTSubject
         'password_hash',
     ];
 
+    /**
+     * Student has one student detail.
+     */
     public function studentDetails(): HasOne
     {
-        return $this->hasOne(StudentDetail::class, 'user_id');
+        return $this->hasOne(
+            StudentDetail::class,
+            'user_id'
+        );
     }
 
     public function getAuthPassword()

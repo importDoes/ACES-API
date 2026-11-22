@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Http\FormRequest;
 use App\Models\AssessmentDimension;
+use App\Http\Requests\StoreAssessmentDimensionRequest;
+use App\Http\Requests\UpdateAssessmentDimensionRequest;
 
 class AssessmentDimensionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return response()->json(
@@ -17,7 +15,7 @@ class AssessmentDimensionController extends Controller
         );
     }
 
-    public function store(FormRequest $request)
+    public function store(StoreAssessmentDimensionRequest $request)
     {
         $dimension = AssessmentDimension::create($request->validated());
 
@@ -33,7 +31,7 @@ class AssessmentDimensionController extends Controller
     }
 
     public function update(
-        FormRequest $request,
+        UpdateAssessmentDimensionRequest $request,
         AssessmentDimension $assessmentDimension
     ) {
         $assessmentDimension->update($request->validated());
@@ -53,3 +51,4 @@ class AssessmentDimensionController extends Controller
         ]);
     }
 }
+
