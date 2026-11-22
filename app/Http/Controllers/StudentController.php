@@ -17,7 +17,7 @@ class StudentController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Students retrieved successfully.',
-            'data' => Student::paginate(10),
+            'data' => Student::with('studentDetails')->get(),
         ]);
     }
 

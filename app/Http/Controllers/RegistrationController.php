@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegistrationRequest;
+use App\Models\Address;
 use App\Models\Role;
 use App\Models\Student;
 use Illuminate\Support\Facades\DB;
@@ -11,6 +12,7 @@ use Throwable;
 
 class RegistrationController extends Controller
 {
+
     public function register(RegistrationRequest $request)
     {
         $validated = $request->validated();
@@ -18,16 +20,18 @@ class RegistrationController extends Controller
         try {
             $student = DB::transaction(function () use ($validated) {
 
-                // Retrieve the student role
+                // Retrieve Student Role
                 $role = Role::where('slug', 'student')->firstOrFail();
-                
+
+                // Create Address
+                $address = Address::create($validated['address']);
+
                 // Create Student Account
                 $student = Student::create([
                     'lrn' => $validated['lrn'],
                     'password_hash' => Hash::make($validated['password']),
                 ]);
 
-                
                 // Create Student Details
                 $student->studentDetails()->create([
                     'role_id' => $role->id,
@@ -35,20 +39,21 @@ class RegistrationController extends Controller
                     'email' => $validated['email'],
                     'age' => $validated['age'],
                     'gender' => $validated['gender'],
-                    'address_id' => $validated['address_id'],
+                    'address_id' => $address->id,
                     'birthdate' => $validated['birthdate'],
                     'contact_number' => $validated['contact_number'],
                     'parent_guardian_name' => $validated['parent_guardian_name'],
                     'guardian_contact_number' => $validated['guardian_contact_number'],
-                ]);
+                    ]);
+
                 return $student;
-
-
             });
 
+            // Load Student Details and Address
+            $student->load('studentDetails.address');
             return response()->json([
                 'status' => 'success',
-                'data' => $student->load('studentDetails'),
+                'data' => $student->with('studentDetails.address'),
                 'message' => 'Student registration successful.',
             ], 201);
         } catch (Throwable $e) {

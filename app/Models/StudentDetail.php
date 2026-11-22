@@ -35,7 +35,7 @@ class StudentDetail extends Model
 
     public function address(): BelongsTo
     {
-        return $this->belongsTo(Address::class, 'addresses');
+        return $this->belongsTo(Address::class, 'address_id');
     }
     //
 }
